@@ -114,6 +114,11 @@ class PermuteAndPadScopesRandom(PermuteAndPadScopes):
         Returns:
             A dict holding the configuration of the layer.
         """
-        config = dict(num_vars_input=self.num_vars_spn_input, factors=self.factors)
+        config = dict(factors=self.factors)
         base_config = super(PermuteAndPadScopesRandom, self).get_config()
+
+        # For PermuteAndPadScopesRandom, permutations are (non-trainable) weights,
+        # not configuration params. So we should remove them from the config dict.
+        del base_config["permutations"]
+
         return dict(list(base_config.items()) + list(config.items()))
